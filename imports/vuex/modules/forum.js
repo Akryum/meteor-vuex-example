@@ -29,6 +29,37 @@ subModule.addActions({
   selectThread(store, state, id) {
     // state is immutable
     store.dispatch('FORUM_SELECTED_THREAD_ID', id);
+  },
+  createThread(store, state, name) {
+    return new Promise((resolve, reject) => {
+      Meteor.call('threads.create', name, (err, result) => {
+        if(err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      });
+    })
+  },
+  removeThread (store, state) {
+    // Meteor method call
+    Meteor.call('threads.remove', state.selectedThreadId);
+  },
+  createPost (store, state, msg) {
+    return new Promise((resolve, reject) => {
+      Meteor.call('posts.create', state.selectedThreadId, msg, (err, result) => {
+        if(err) {
+          console.error(err);
+          reject(err);
+        } else {
+          resolve(result);
+        }
+      })
+    });
+  },
+  removePost(store, state, id) {
+    Meteor.call('posts.remove', id)
   }
 });
 

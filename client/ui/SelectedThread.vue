@@ -10,7 +10,7 @@
       </div>
 
       <!-- New post form -->
-      <form @submit.prevent="createPost">
+      <form @submit.prevent="handleCreatePost">
         <input v-model="newPostMessage" placeholder="Type new message" required/>
       </form>
 
@@ -33,24 +33,20 @@ export default {
       trackers: {
         selectedThread: forum.trackers.getSelectedThread,
         posts: forum.trackers.getPosts
+      },
+      actions: {
+        createPost: forum.actions.createPost,
+        removeThread: forum.actions.removeThread
       }
     }
   },
   methods: {
-    createPost () {
-      // Meteor method call
-      Meteor.call('posts.create', this.selectedThread._id, this.newPostMessage, (err, post_id) => {
-        if(err) {
-          alert('An error occured while creating post.');
-          console.error(err);
-        } else {
-          this.newPostMessage = '';
-        }
-      })
-    },
-    removeThread () {
-      // Meteor method call
-      Meteor.call('threads.remove', this.selectedThread._id);
+    handleCreatePost () {
+      this.createPost(this.newPostMessage).then(() => {
+        this.newPostMessage = '';
+      }).catch((e) => {
+        alert('An error occured while creating post.');
+      });
     }
   }
 }

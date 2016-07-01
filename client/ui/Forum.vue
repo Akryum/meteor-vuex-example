@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <h1>Forum ({{count}})</h1>
-    <form @submit.prevent="createThread">
+    <form @submit.prevent="handleCreateThread">
       <input v-model="newThreadName" placeholder="Type new thread name" required/>
     </form>
 
@@ -32,22 +32,23 @@ export default {
       trackers: {
         threads: forum.trackers.getThreads
       },
-      getters: forum.getters,
-      actions: forum.actions
+      getters: {
+        selectedThreadId: forum.getters.selectedThreadId
+      },
+      actions: {
+        selectThread: forum.actions.selectThread,
+        createThread: forum.actions.createThread
+      }
     }
   },
   methods: {
-    createThread () {
-      // Meteor method call
-      Meteor.call('threads.create', this.newThreadName, (err, thread_id) => {
-        if(err) {
-          alert('An error occured while creating thread.');
-          console.error(err);
-        } else {
-          this.newThreadName = '';
-          this.selectThread(thread_id);
-        }
-      })
+    handleCreateThread () {
+      this.createThread(this.newThreadName).then((thread_id) => {
+        this.newThreadName = '';
+        this.selectThread(thread_id);
+      }).catch((e) => {
+        alert('An error occured while creating thread.');
+      });
     }
   },
 }

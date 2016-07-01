@@ -1,15 +1,17 @@
 <template>
 <div class="post">
-  <div class="message">{{data.message}}<a @click="removePost" class="action">x</a></div>
+  <div class="message">{{data.message}}<a @click="removePost(data._id)" class="action">x</a></div>
 </div>
 </template>
 
 <script>
 export default {
   props: [ 'data' ],
-  methods: {
-    removePost() {
-      Meteor.call('posts.remove', this.data._id)
+  vuex({forum}) {
+    return {
+      actions: {
+        removePost: forum.actions.removePost
+      }
     }
   }
 }
