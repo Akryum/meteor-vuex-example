@@ -22,44 +22,32 @@ subModule.addMutations({
 });
 
 subModule.addActions({
-  toggleSortDate(store, state) {
+  toggleSortDate({store, state}) {
     // state is immutable
     store.dispatch('FORUM_SORT_DATE', -1*state.sortDate);
   },
-  selectThread(store, state, id) {
+  selectThread({store}, id) {
     // state is immutable
     store.dispatch('FORUM_SELECTED_THREAD_ID', id);
   },
-  createThread(store, state, name) {
-    return new Promise((resolve, reject) => {
-      Meteor.call('threads.create', name, (err, result) => {
-        if(err) {
-          console.error(err);
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    })
-  },
-  removeThread (store, state) {
-    // Meteor method call
-    Meteor.call('threads.remove', state.selectedThreadId);
-  },
-  createPost (store, state, msg) {
-    return new Promise((resolve, reject) => {
-      Meteor.call('posts.create', state.selectedThreadId, msg, (err, result) => {
-        if(err) {
-          console.error(err);
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      })
+  createThread(_, name) {
+    return this.callMethod('threads.create', name, (err, result) => {
+      if(err) {
+        console.error(err);
+      } else {
+        // Call another action on the submodule
+        this.actions.selectThread(result);
+      }
     });
   },
-  removePost(store, state, id) {
-    Meteor.call('posts.remove', id)
+  removeThread ({state}) {
+    return this.callMethod('threads.remove', state.selectedThreadId);
+  },
+  createPost ({state}, msg) {
+    return this.callMethod('posts.create', state.selectedThreadId, msg)
+  },
+  removePost(_, id) {
+    return this.callMethod('posts.remove', id)
   }
 });
 

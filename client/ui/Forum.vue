@@ -43,9 +43,8 @@ export default {
   },
   methods: {
     handleCreateThread () {
-      this.createThread(this.newThreadName).then((thread_id) => {
+      this.createThread(this.newThreadName).then(() => {
         this.newThreadName = '';
-        this.selectThread(thread_id);
       }).catch((e) => {
         alert('An error occured while creating thread.');
       });

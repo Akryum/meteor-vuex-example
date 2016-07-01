@@ -22,7 +22,7 @@ root.addMutations({
 
 // Using centralized actions is good practice
 root.addActions({
-  setName(store, state, text) {
+  setName({store}, text) {
     // state is immutable
     store.dispatch('NAME', text);
   }
