@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  vuex:(root) => ({
+  vuex: root => ({
     getters: root.getters,
     actions: root.actions
   }),

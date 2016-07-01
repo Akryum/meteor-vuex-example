@@ -7,7 +7,7 @@
 <script>
 export default {
   props: [ 'data' ],
-  vuex:({forum}) => ({
+  vuex: ({forum}) => ({
     actions: {
       removePost: forum.actions.removePost
     }
