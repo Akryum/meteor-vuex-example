@@ -15,32 +15,28 @@
 
 <script>
 export default {
-  data () {
-    return {
-      // Vue data
-      newThreadName: ''
-    }
-  },
+  data: () => ({
+    // Vue data
+    newThreadName: ''
+  }),
   computed: {
     count () {
       return this.threads.length;
     }
   },
   // Vuex options
-  vuex({forum}) {
-    return {
-      trackers: {
-        threads: forum.trackers.getThreads
-      },
-      getters: {
-        selectedThreadId: forum.getters.selectedThreadId
-      },
-      actions: {
-        selectThread: forum.actions.selectThread,
-        createThread: forum.actions.createThread
-      }
+  vuex: ({forum}) => ({
+    trackers: {
+      threads: forum.trackers.getThreads
+    },
+    getters: {
+      selectedThreadId: forum.getters.selectedThreadId
+    },
+    actions: {
+      selectThread: forum.actions.selectThread,
+      createThread: forum.actions.createThread
     }
-  },
+  }),
   methods: {
     handleCreateThread () {
       this.createThread(this.newThreadName).then(() => {

@@ -7,13 +7,11 @@
 <script>
 export default {
   props: [ 'data' ],
-  vuex({forum}) {
-    return {
-      actions: {
-        removePost: forum.actions.removePost
-      }
+  vuex:({forum}) => ({
+    actions: {
+      removePost: forum.actions.removePost
     }
-  }
+  })
 }
 </script>
 

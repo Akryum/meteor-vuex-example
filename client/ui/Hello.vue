@@ -7,12 +7,10 @@
 
 <script>
 export default {
-  vuex(root) {
-    return {
-      getters: root.getters,
-      actions: root.actions
-    }
-  },
+  vuex:(root) => ({
+    getters: root.getters,
+    actions: root.actions
+  }),
   computed: {
     nameInput: {
       get() {

@@ -22,24 +22,20 @@
 
 <script>
 export default {
-  data () {
-    return {
-      newPostMessage: '' // Vue data
-    }
-  },
+  data: () => ({
+    newPostMessage: '' // Vue data
+  }),
   // Vuex-specific options
-  vuex({forum}) {
-    return {
-      trackers: {
-        selectedThread: forum.trackers.getSelectedThread,
-        posts: forum.trackers.getPosts
-      },
-      actions: {
-        createPost: forum.actions.createPost,
-        removeThread: forum.actions.removeThread
-      }
+  vuex: ({forum}) => ({
+    trackers: {
+      selectedThread: forum.trackers.getSelectedThread,
+      posts: forum.trackers.getPosts
+    },
+    actions: {
+      createPost: forum.actions.createPost,
+      removeThread: forum.actions.removeThread
     }
-  },
+  }),
   methods: {
     handleCreatePost () {
       this.createPost(this.newPostMessage).then(() => {
