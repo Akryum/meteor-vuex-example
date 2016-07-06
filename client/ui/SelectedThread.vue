@@ -28,12 +28,12 @@ export default {
   // Vuex-specific options
   vuex: ({forum}) => ({
     trackers: {
-      selectedThread: forum.trackers.getSelectedThread,
-      posts: forum.trackers.getPosts
+      selectedThread: forum.thread.trackers.getSelectedThread,
+      posts: forum.thread.trackers.getPosts
     },
     actions: {
-      createPost: forum.actions.createPost,
-      removeThread: forum.actions.removeThread
+      createPost: forum.thread.actions.createPost,
+      removeThread: forum.thread.actions.removeThread
     }
   }),
   methods: {

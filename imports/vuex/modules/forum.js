@@ -2,59 +2,46 @@ import {StoreSubModule} from 'meteor/akryum:vuex';
 
 const subModule = new StoreSubModule('forum');
 
+const sortFields = ['date', 'name'];
+
 subModule.addState({
-  sortDate: -1,
-  selectedThreadId: null
+  sortDirection: -1,
+  sortField: sortFields[0]
 });
 
 subModule.addGetters({
-  sortDate: state => state.sortDate,
-  selectedThreadId: sate => sate.selectedThreadId
+  sortDirection: state => state.sortDirection,
+  sortField: state => state.sortField
 });
 
 subModule.addMutations({
-  FORUM_SORT_DATE(state, order) {
-    state.sortDate = order;
+  FORUM_SORT_DIRECTION(state, direction) {
+    state.sortDirection = direction;
   },
-  FORUM_SELECTED_THREAD_ID(state, id) {
-    state.selectedThreadId = id;
+  FORUM_SORT_FIELD(state, field) {
+    state.sortField = field;
   }
 });
 
 subModule.addActions({
-  toggleSortDate({store, state}) {
+  toggleSortDirection({store, state}) {
     // state is immutable
-    store.dispatch('FORUM_SORT_DATE', -1*state.sortDate);
+    store.dispatch('FORUM_SORT_DIRECTION', -1*state.sortDirection);
   },
-  selectThread({store}, id) {
+  cycleSortField({store, state}) {
     // state is immutable
-    store.dispatch('FORUM_SELECTED_THREAD_ID', id);
-  },
-  createThread(_, name) {
-    return this.callMethod('threads.create', name, (err, result) => {
-      if(err) {
-        console.error(err);
-      } else {
-        // Call another action on the submodule
-        this.actions.selectThread(result);
-      }
-    });
-  },
-  removeThread ({state}) {
-    return this.callMethod('threads.remove', state.selectedThreadId);
-  },
-  createPost ({state}, msg) {
-    return this.callMethod('posts.create', state.selectedThreadId, msg)
-  },
-  removePost(_, id) {
-    return this.callMethod('posts.remove', id)
+    let index = sortFields.indexOf(state.sortField) + 1;
+    if(index === sortFields.length) {
+      index = 0;
+    }
+    store.dispatch('FORUM_SORT_FIELD', sortFields[index]);
   }
 });
 
 // Meteor integration
 
 // Import a meteor collection
-import {Threads, Posts} from '/imports/api/collections';
+import {Threads} from '/imports/api/collections';
 
 // Add trackers to the store module
 subModule.addTrackers({
@@ -85,15 +72,18 @@ subModule.addTrackers({
       watch(state) {
         // state is immutable
         return {
-          sortDate: state.sortDate
+          sortDirection: state.sortDirection,
+          sortField: state.sortField
         }
       },
       // Update the meteor data
       // Data is relative to the module
-      update(data, {sortDate}) {
+      update(data, {sortDirection, sortField}) {
         // Meteor data query
         let threads = Threads.find({}, {
-          sort: {date: sortDate}
+          sort: {
+            [sortField]: sortDirection
+          }
         }).fetch();
 
         // Update the module meteor data
@@ -109,45 +99,12 @@ subModule.addTrackers({
       // Else, you need to add it on a vue component or call tracker.addClient()
       isActivated: false
     }
-  },
-  selectedThread() {
-    let sub;
-    return {
-      init(data) {
-        data.selectedThread = null;
-        data.posts = [];
-      },
-      watch(state) {
-        // Dynamic subscription
-        if(sub) {
-          sub.stop();
-        }
-        if(state.selectedThreadId) {
-          sub = Meteor.subscribe('posts', state.selectedThreadId);
-          console.log('subscribed posts to thread ', state.selectedThreadId);
-        }
-
-        return {
-          id: state.selectedThreadId
-        }
-      },
-      update(data, {id}) {
-        data.selectedThread = Object.freeze(Threads.findOne({
-          _id: id
-        }));
-        data.posts = Object.freeze(Posts.find({
-          thread_id: id
-        }, {
-          sort: {created: -1}
-        }).fetch());
-        console.log('posts', data.posts);
-      },
-      getters: {
-        getSelectedThread: data => data.selectedThread,
-        getPosts: data => data.posts
-      }
-    }
   }
 });
+
+
+// Nested Submodule
+import thread from './thread';
+subModule.addModule(thread);
 
 export default subModule;

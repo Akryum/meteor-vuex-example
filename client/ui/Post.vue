@@ -9,7 +9,7 @@ export default {
   props: [ 'data' ],
   vuex: ({forum}) => ({
     actions: {
-      removePost: forum.actions.removePost
+      removePost: forum.thread.actions.removePost
     }
   })
 }

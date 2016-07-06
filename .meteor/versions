@@ -4,7 +4,7 @@ akryum:vue-component@0.5.1
 akryum:vue-component-dev-client@0.0.5
 akryum:vue-component-dev-server@0.0.1
 akryum:vue-less@0.0.3
-akryum:vuex@0.2.2
+akryum:vuex@0.3.0
 allow-deny@1.0.5
 autoupdate@1.2.10
 babel-compiler@6.8.3

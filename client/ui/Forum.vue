@@ -5,6 +5,8 @@
       <input v-model="newThreadName" placeholder="Type new thread name" required/>
     </form>
 
+    <sort-field :field="sortField" :direction="sortDirection" @field="cycleSortField" @direction="toggleSortDirection"></sort-field>
+
     <thread-item v-for="thread in threads" :data="thread" :selected="thread._id === selectedThreadId" @select="selectThread(thread._id)"></thread-item>
 
     <hr />
@@ -30,11 +32,13 @@ export default {
       threads: forum.trackers.getThreads
     },
     getters: {
-      selectedThreadId: forum.getters.selectedThreadId
+      selectedThreadId: forum.thread.getters.selectedThreadId,
+      ...forum.getters
     },
     actions: {
-      selectThread: forum.actions.selectThread,
-      createThread: forum.actions.createThread
+      selectThread: forum.thread.actions.selectThread,
+      createThread: forum.thread.actions.createThread,
+      ...forum.actions
     }
   }),
   methods: {

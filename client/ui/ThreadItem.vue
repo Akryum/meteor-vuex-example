@@ -1,5 +1,8 @@
 <template>
-  <div class="thread-item" :class="css" @click="select">{{data.name}}</div>
+  <div class="thread-item" :class="css" @click="select">
+    <span class="name">{{data.name}}</span>
+    <span class="date">{{data.date | dateFromNow}}</span>
+  </div>
 </template>
 
 <script>
@@ -37,5 +40,10 @@ export default {
 .thread-item.selected {
     background: #caecde;
     border-radius: 3px;
+}
+
+.date {
+  color: #999;
+  float: right;
 }
 </style>

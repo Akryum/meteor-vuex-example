@@ -8,7 +8,8 @@
     "meteor-node-stubs": "~0.2.0"
   },
   "devDependencies": {
+    "moment": "^2.14.1",
     "vue": "^1.0.24",
-    "vuex": "^0.8.0"
+    "vuex": "^1.0.0-rc.2"
   }
 }
